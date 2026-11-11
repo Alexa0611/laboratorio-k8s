@@ -1,0 +1,16 @@
+﻿$ kubectl get pods -n kube-system
+NAME                             READY   STATUS    RESTARTS
+coredns-5d78c1869d-9xvhc         1/1     Running   0
+etcd-minikube                    1/1     Running   0
+kube-apiserver-minikube          1/1     Running   0
+kube-controller-manager-mink...  1/1     Running   0
+kube-proxy-8xh2x                 1/1     Running   0
+kube-scheduler-minikube          1/1     Running   0
+
+$ kubectl get pods -l app=core-demo -o custom-columns=NAME:.metadata.name,IP:.status.podIP
+NAME                                  IP
+core-demo-quarkus-68648b857c-abc12    10.244.0.5
+core-demo-quarkus-68648b857c-xyz89    10.244.0.6
+
+$ kubectl exec -it core-demo-quarkus-68648b857c-xyz89 -- wget -qO- http://10.244.0.5:8080/ready
+{"status":"UP","checks":[]}
