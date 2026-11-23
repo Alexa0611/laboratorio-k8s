@@ -1,0 +1,62 @@
+curl -i http://localhost:8080/health      
+# Estado general (startup + liveness + readiness)
+HTTP/1.1 200 OK
+content-type: application/json; charset=UTF-8
+cache-control: no-store
+content-length: 138
+
+{
+    "status": "UP",
+    "checks": [
+        {
+            "name": "catalog-database-check",
+            "status": "UP"
+        }
+    ]
+}curl: (3) URL rejected: No host present
+curl: (6) Could not resolve host: Estado
+curl: (6) Could not resolve host: general
+curl: (3) URL rejected: Bad hostname
+curl: (3) URL rejected: Bad hostname
+curl: (6) Could not resolve host: liveness
+curl: (3) URL rejected: Bad hostname
+curl: (3) URL rejected: Bad hostname
+
+# Readiness: ¿está listo para recibir tráfico?
+HTTP/1.1 200 OK
+content-type: application/json; charset=UTF-8
+cache-control: no-store
+content-length: 138
+
+{
+    "status": "UP",
+    "checks": [
+        {
+            "name": "catalog-database-check",
+            "status": "UP"
+        }
+    ]
+}curl: (3) URL rejected: No host present
+curl: (3) URL rejected: Port number was not a decimal number between 0 and 65535
+curl: (6) Could not resolve host: xn--est-hha7o
+curl: (6) Could not resolve host: listo
+curl: (6) Could not resolve host: para
+curl: (6) Could not resolve host: recibir
+curl: (6) Could not resolve host: xn--trfico-qta
+
+# Liveness: ¿está vivo el proceso?
+HTTP/1.1 200 OK
+content-type: application/json; charset=UTF-8
+cache-control: no-store
+content-length: 45
+
+{
+    "status": "UP",
+    "checks": [
+    ]
+}curl: (3) URL rejected: No host present
+curl: (3) URL rejected: Port number was not a decimal number between 0 and 65535
+curl: (6) Could not resolve host: xn--est-hha7o
+curl: (6) Could not resolve host: vivo
+curl: (6) Could not resolve host: el
+curl: (6) Could not resolve host: proceso

@@ -1,0 +1,51 @@
+¿Disminuyeron las respuestas HTTP 500 respecto a la línea base? (deberían ser 0 o muy cercano a 0)
+Quedó en 0
+
+¿Qué porcentaje de respuestas fue SUCCESS vs DEGRADED_CACHE en la configuración completa?
+succes 8% y degraded_cache 92%
+
+¿La latencia de respuesta mejoró con respecto a Lab 1.1? (compara tiempos en time_total de ambos archivos)
+Mejoró mucho el tiempo
+
+¿Qué costo tiene el Retry en latencia y llamadas adicionales a la base de datos?
+Tiempo adicional por reintentos y solicitudes adicionales
+
+Evento crítico: ¿En qué momento observaste que el circuito se abrió (múltiples líneas con contador 0)? 
+Cuando empezó a mandar muchas DEGRADED_CACHE
+
+¿Cuánto duró la fase OPEN (~5 segundos)?
+Debe durar 5 segundos
+
+¿Después de que el circuito se recuperó (HALF_OPEN → CLOSED), volvieron a funcionar los reintentos completos?
+Sí, volvieron a funcionar
+
+--EVIDENCIA--
+║         ANÁLISIS DE RESILIENCIA: Lab 1.1 vs Lab 1.2            ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 LÍNEA BASE (Lab 1.1 - SIN patrones)
+─────────────────────────────────────────
+Total solicitudes:        200
+SUCCESS (HTTP 200):       130 (~65%)
+Errores/No disponibles:   70 (~35%)
+Disponibilidad:           0.65 (65%)
+
+📊 CON PATRONES (Lab 1.2 - Completo: Timeout + Retry + Fallback + CircuitBreaker)
+─────────────────────────────────────────────────────────────────────────────────
+Total solicitudes:        200
+SUCCESS (HTTP 200):       15 (~8%)
+DEGRADED_CACHE (HTTP 200):185 (~92%)
+Errores HTTP 500:         0
+Disponibilidad:           1 (100%)
+
+📈 COMPARACIÓN - MEJORA OBTENIDA
+─────────────────────────────────────────
+Disponibilidad mejorada:  0.35 (35.00%)
+Errores eliminados:       ~100% (de ~35% a 0%)
+HTTP 500 desaparecieron:  ✅ Completamente
+Respuestas degradadas:    185 solicitudes salvadas por @Fallback
+
+✅ CONCLUSIÓN
+─────────────────────────────────────────
+La implementación de patrones de resiliencia fue EXITOSA.
+Disponibilidad alcanzada: ~100% (aceptable para mayoría de aplicaciones)

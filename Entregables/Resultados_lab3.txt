@@ -1,0 +1,92 @@
+PS C:\Users\alexa\OneDrive\Escritorio\itq-high-availability-deployment-architecture-main\unidad-1-ha-architecture\02-laboratorio\proyecto-base-unidad-01\catalog-service> curl.exe -s http://localhost:8080/v1/products | jq .
+{
+  "status": "DEGRADED_CACHE",
+  "data": [
+    "Cached Product A",
+    "Cached Product B"
+  ]
+}
+PS C:\Users\alexa\OneDrive\Escritorio\itq-high-availability-deployment-architecture-main\unidad-1-ha-architecture\02-laboratorio\proyecto-base-unidad-01\catalog-service> curl.exe -s http://localhost:8080/health | jq .
+{
+  "status": "UP",
+  "checks": [
+    {
+      "name": "catalog-database-check",
+      "status": "UP"
+    }
+  ]
+}
+PS C:\Users\alexa\OneDrive\Escritorio\itq-high-availability-deployment-architecture-main\unidad-1-ha-architecture\02-laboratorio\proyecto-base-unidad-01\catalog-service> curl.exe -s http://localhost:8080/ready | jq .
+{
+  "status": "DOWN",
+  "checks": [
+    {
+      "name": "catalog-database-check",
+      "status": "DOWN"
+    }
+  ]
+}
+PS C:\Users\alexa\OneDrive\Escritorio\itq-high-availability-deployment-architecture-main\unidad-1-ha-architecture\02-laboratorio\proyecto-base-unidad-01\catalog-service> curl.exe -s http://localhost:8080/live | jq .
+{
+  "status": "UP",
+  "checks": []
+}
+PS C:\Users\alexa\OneDrive\Escritorio\itq-high-availability-deployment-architecture-main\unidad-1-ha-architecture\02-laboratorio\proyecto-base-unidad-01\catalog-service> kubectl describe pod catalog-service-6ffb95bdc6-gt6br
+Name:             catalog-service-6ffb95bdc6-gt6br
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 17 Nov 2026 02:15:53 -0600
+Labels:           app=catalog-service
+                  pod-template-hash=6ffb95bdc6
+                  version=v1.0.0
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.10
+IPs:
+  IP:           10.244.0.10
+Controlled By:  ReplicaSet/catalog-service-6ffb95bdc6
+Containers:
+  catalog-service:
+    Container ID:   containerd://bd3861b09c3834b16b2098b95aff9112de7581a2367fae7996cb043fe44a923e
+    Image:          ale061104/catalog-service:1.0.1
+    Image ID:       docker.io/ale061104/catalog-service@sha256:91ba2377cb830d2dbc54464178eb5b709e0a263ca0d19e7edb193f6896a7263d
+    Port:           8080/TCP (http)
+    Host Port:      0/TCP (http)
+    State:          Running
+      Started:      Tue, 17 Nov 2026 02:16:45 -0600
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:8080/live delay=10s timeout=2s period=10s #success=1 #failure=3
+    Readiness:      http-get http://:8080/ready delay=5s timeout=2s period=5s #success=1 #failure=2
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6kqns (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-6kqns:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  13m                 default-scheduler  Successfully assigned default/catalog-service-6ffb95bdc6-gt6br to minikube
+  Normal   Pulling    13m                 kubelet            spec.containers{catalog-service}: Pulling image "ale061104/catalog-service:1.0.1"
+  Normal   Pulled     12m                 kubelet            spec.containers{catalog-service}: Successfully pulled image "ale061104/catalog-service:1.0.1" in 51.117s (51.117s including waiting). Image size: 178674924 bytes.
+  Normal   Created    12m                 kubelet            spec.containers{catalog-service}: Container created
+  Normal   Started    12m                 kubelet            spec.containers{catalog-service}: Container started
+  Warning  Unhealthy  42s (x15 over 11m)  kubelet            spec.containers{catalog-service}: Readiness probe failed: HTTP probe failed with statuscode: 503
